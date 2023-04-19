@@ -1,4 +1,4 @@
-# hello_world
+# Medicine Time
 
 A new Flutter project created with https://flutlab.io
 
