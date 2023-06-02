@@ -1,27 +1,43 @@
 //ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:medicine_time/model/remedio.dart';
+import 'package:medicine_time/controller/remedio_controller.dart';
+//import 'package:medicine_time/model/remedio.dart';
 import 'package:medicine_time/view/widget_mensagem.dart';
 
-class WidgetRemedio extends StatelessWidget {
-  final Remedio r;
+class WidgetRemedio extends StatefulWidget {
+  final String nome;
+  final String dose;
+  final String horaInicio;
+  final String id;
 
-  const WidgetRemedio(this.r, {super.key});
+  const WidgetRemedio(this.nome, this.dose, this.horaInicio, this.id,
+      {super.key});
+
+  @override
+  State<WidgetRemedio> createState() => _WidgetRemedioState();
+}
+
+class _WidgetRemedioState extends State<WidgetRemedio> {
+  //final Remedio r;
+  final int index = 0;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
         leading: Image.asset("lib/images/drogas.png"),
-        title: Text(r.nome),
-        subtitle: Text(r.dose + '  ' + r.horaInicio),
+        title: Text(
+          widget.nome,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(widget.dose + '  ' + widget.horaInicio),
         trailing: IconButton(
           icon: Icon(Icons.delete_outline),
           onPressed: () {
-            setState(() {
-              lista.removeAt(index);
-            });
+            RemedioController().excluir(context, widget.id);
             WidgetMensagem().simples(context, 'Remedio removido com sucesso.');
           },
         ),
@@ -29,10 +45,10 @@ class WidgetRemedio extends StatelessWidget {
         onTap: () {
           setState(() {
             //Armazenar a posição da lista
-            this.index = index;
-            txtNome.text = lista[index].nome;
-            txtDose.text = lista[index].dose;
-            txtHoraInicio.text = lista[index].horaInicio;
+            //index = index;
+            //txtNome.text = lista[index].nome;
+            //txtDose.text = lista[index].dose;
+            //txtHoraInicio.text = lista[index].horaInicio;
           });
         },
         //Alterar a cor do ITEM selecionado

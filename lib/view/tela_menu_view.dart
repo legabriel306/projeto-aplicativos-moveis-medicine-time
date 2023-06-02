@@ -28,8 +28,8 @@ class _TelaMenuState extends State<TelaMenu> {
   @override
   void initState() {
     index = -1;
-    lista.add(Remedio('Omeprazol', '10 ML', '10:00'));
-    lista.add(Remedio('Buscopan', '1X', '08:00'));
+    //lista.add(Remedio('Omeprazol', '10 ML', '10:00'));
+    //lista.add(Remedio('Buscopan', '1X', '08:00'));
     super.initState();
   }
 
@@ -39,7 +39,7 @@ class _TelaMenuState extends State<TelaMenu> {
       appBar: AppBar(
         title: Row(
           children: [
-            Expanded(child: Text('Tarefas')),
+            Expanded(child: Text('Remedios')),
             FutureBuilder<String>(
               future: LoginController().usuarioLogado(),
               builder: (context, snapshot) {
@@ -53,7 +53,7 @@ class _TelaMenuState extends State<TelaMenu> {
                       ),
                       onPressed: () {
                         LoginController().logout();
-                        Navigator.pushReplacementNamed(context, 'login');
+                        Navigator.pushReplacementNamed(context, 'TelaLogin');
                       },
                       icon: Icon(Icons.exit_to_app, size: 14),
                       label: Text(snapshot.data.toString()),
@@ -88,7 +88,8 @@ class _TelaMenuState extends State<TelaMenu> {
                     itemBuilder: (context, index) {
                       String id = dados.docs[index].id;
                       dynamic item = dados.docs[index].data();
-                      return WidgetRemedio();
+                      return WidgetRemedio(
+                          item['nome'], item['dose'], item['horaInicio'], id);
                     },
                   );
                 } else {
@@ -143,7 +144,7 @@ class _TelaMenuState extends State<TelaMenu> {
                 onPressed: () {
                   //REMOVER
                   setState(() {
-                    RemedioController().excluir(context, id);
+                    //RemedioController().excluir(context, id);
                     lista.removeAt(index);
                   });
                   WidgetMensagem()

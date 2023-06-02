@@ -38,7 +38,7 @@ class LoginController {
     FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: senha)
         .then((resultado) {
-      Navigator.pushNamed(context, 'TelaMenu');
+        Navigator.pushReplacementNamed(context, 'TelaMenu');
     }).catchError((e) {
       switch (e.code) {
         case 'invalid-email':
