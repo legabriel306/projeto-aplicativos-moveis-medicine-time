@@ -4,11 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medicine_time/controller/login_controller.dart';
 import 'package:medicine_time/controller/remedio_controller.dart';
-import 'package:medicine_time/view/widget_mensagem.dart';
 import 'package:medicine_time/view/widget_remedio.dart';
 
 import '../model/remedio.dart';
-import './tela_cadastro_remedio_view.dart';
 
 class TelaMenu extends StatefulWidget {
   const TelaMenu({super.key});
@@ -24,6 +22,7 @@ class _TelaMenuState extends State<TelaMenu> {
   var txtNome = TextEditingController();
   var txtDose = TextEditingController();
   var txtHoraInicio = TextEditingController();
+  var contador = 0;
 
   @override
   void initState() {
@@ -53,9 +52,9 @@ class _TelaMenuState extends State<TelaMenu> {
                       ),
                       onPressed: () {
                         LoginController().logout();
-                        Navigator.pushReplacementNamed(context, 'TelaLogin');
+                        Navigator.pushNamed(context, 'TelaConfiguracoes');
                       },
-                      icon: Icon(Icons.exit_to_app, size: 14),
+                      icon: Icon(Icons.engineering, size: 14),
                       label: Text(snapshot.data.toString()),
                     ),
                   );
@@ -88,6 +87,7 @@ class _TelaMenuState extends State<TelaMenu> {
                     itemBuilder: (context, index) {
                       String id = dados.docs[index].id;
                       dynamic item = dados.docs[index].data();
+                      contador++;
                       return WidgetRemedio(
                           item['nome'], item['dose'], item['horaInicio'], id);
                     },
@@ -108,75 +108,92 @@ class _TelaMenuState extends State<TelaMenu> {
         },
       ),
       persistentFooterButtons: [
-        Text('Total de Remédios: ${lista.length}'),
+        Text('Total de Remédios: ${contador}'),
       ],
     );
   }
 
-  receber(BuildContext context) async {
-    final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const TelaCadastroRemedio(),
-        ));
-    setState(() {
-      lista.add(result);
-    });
-  }
-
-  listar() {
-    return Container(
-      padding: EdgeInsets.all(20),
-      color: Colors.blueGrey.shade50,
-      child: ListView.builder(
-        //Definir a quantidade de elementos
-        itemCount: lista.length,
-        //Definir a aparência dos elementos
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              leading: Image.asset("lib/images/drogas.png"),
-              title: Text(lista[index].nome),
-              subtitle:
-                  Text(lista[index].dose + '  ' + lista[index].horaInicio),
-              trailing: IconButton(
-                icon: Icon(Icons.delete_outline),
-                onPressed: () {
-                  //REMOVER
-                  setState(() {
-                    //RemedioController().excluir(context, id);
-                    lista.removeAt(index);
-                  });
-                  WidgetMensagem()
-                      .simples(context, 'Remedio removido com sucesso.');
-                },
-              ),
-              //Selecionar um ITEM da lista
-              onTap: () {
-                setState(() {
-                  //Armazenar a posição da lista
-                  this.index = index;
-                  txtNome.text = lista[index].nome;
-                  txtDose.text = lista[index].dose;
-                  txtHoraInicio.text = lista[index].horaInicio;
-                });
-              },
-              //Alterar a cor do ITEM selecionado
-              tileColor: (this.index == index)
-                  ? Colors.amberAccent.shade100
-                  : Colors.white,
-              onLongPress: () {
-                setState(() {
-                  this.index = -1;
-                  txtNome.clear();
-                  txtDose.clear();
-                  txtHoraInicio.clear();
-                });
+  void alterarRemedio(context, {docId}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // retorna um objeto do tipo Dialog
+        return AlertDialog(
+          title: Text("Adicionar Tarefa"),
+          content: SizedBox(
+            height: 250,
+            width: 300,
+            child: Column(
+              children: [
+                TextField(
+                  controller: txtNome,
+                  decoration: InputDecoration(
+                    labelText: 'Nome',
+                    prefixIcon: Icon(Icons.description),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: txtDose,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    labelText: 'Dose',
+                    alignLabelWithHint: true,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                TextField(
+                  controller: txtHoraInicio,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    labelText: 'Intervalo de tempo',
+                    alignLabelWithHint: true,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actionsPadding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+          actions: [
+            TextButton(
+              child: Text("fechar"),
+              onPressed: () {
+                txtNome.clear();
+                txtDose.clear();
+                txtHoraInicio.clear();
+                Navigator.of(context).pop();
               },
             ),
-          );
-        },
-      ),
+            ElevatedButton(
+              child: Text("salvar"),
+              onPressed: () {
+                var r = Remedio(
+                  LoginController().idUsuario(),
+                  txtNome.text,
+                  txtDose.text,
+                  txtHoraInicio.text,
+                );
+                txtNome.clear();
+                txtDose.clear();
+                txtHoraInicio.clear();
+                if (docId == null) {
+                  //
+                  // ADICIONAR TAREFA
+                  //
+                  RemedioController().adicionar(context, r);
+                } else {
+                  //
+                  // ATUALIZAR TAREFA
+                  //
+                  RemedioController().atualizar(context, docId, r);
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

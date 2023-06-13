@@ -64,7 +64,7 @@ class _TelaLoginState extends State<TelaLogin> {
                 decoration: InputDecoration(
                   labelText: "Senha",
                   labelStyle: TextStyle(
-                    color: Colors.black,
+                    color: Colors.black38,
                     fontWeight: FontWeight.w400,
                     fontSize: 20,
                   ),

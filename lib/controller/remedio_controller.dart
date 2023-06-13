@@ -10,8 +10,10 @@ class RemedioController {
     FirebaseFirestore.instance
         .collection('remedios')
         .add(r.toJson())
-        .then((value) => WidgetMensagem().sucesso(context, 'Remedio adicionada com sucesso'))
-        .catchError((e) => WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}'))
+        .then((value) =>
+            WidgetMensagem().sucesso(context, 'Remedio adicionada com sucesso'))
+        .catchError(
+            (e) => WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}'))
         .whenComplete(() => Navigator.of(context).pop());
   }
 
@@ -20,8 +22,10 @@ class RemedioController {
         .collection('remedios')
         .doc(id)
         .update(r.toJson())
-        .then((value) => WidgetMensagem().sucesso(context, 'Remedio atualizada com sucesso'))
-        .catchError((e) => WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}'))
+        .then((value) =>
+            WidgetMensagem().sucesso(context, 'Remedio atualizada com sucesso'))
+        .catchError(
+            (e) => WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}'))
         .whenComplete(() => Navigator.of(context).pop());
   }
 
@@ -30,8 +34,10 @@ class RemedioController {
         .collection('remedios')
         .doc(id)
         .delete()
-        .then((value) => WidgetMensagem().sucesso(context, 'Remedio excluída com sucesso'))
-        .catchError((e) => WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}'));
+        .then((value) =>
+            WidgetMensagem().sucesso(context, 'Remedio excluída com sucesso'))
+        .catchError((e) =>
+            WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}'));
   }
 
   listar() {

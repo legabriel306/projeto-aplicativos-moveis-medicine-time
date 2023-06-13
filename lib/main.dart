@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:medicine_time/view/tela_configuracao_view.dart';
 import 'package:medicine_time/view/tela_splash_view.dart';
 import './view/tela_login_view.dart';
 import 'package:medicine_time/view/tela_menu_view.dart';
@@ -35,6 +36,7 @@ Future<void> main() async {
           'TelaMenu': (context) => TelaMenu(),
           'TelaCadastroRemedio': (context) => TelaCadastroRemedio(),
           'TelaSobre': (context) => TelaSobre(),
+          'TelaConfiguracoes': (context) => TelaConfiguracoes(),
         },
         theme: ThemeData(
           primarySwatch: Colors.green,

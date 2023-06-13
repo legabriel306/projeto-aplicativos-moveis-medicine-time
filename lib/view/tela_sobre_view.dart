@@ -95,11 +95,11 @@ class TelaSobre extends StatelessWidget {
                 ),
                 iconSize: 50,
                 onPressed: () async {
-                  const url = 'https://github.com/legabriel306';
-                  if (await canLaunch(url)) {
-                    await launch(url);
+                  final Uri _url = Uri.parse('https://github.com/legabriel306');
+                  if (await canLaunchUrl(_url)) {
+                    await launchUrl(_url);
                   } else {
-                    throw 'Could not launch $url';
+                    throw 'Could not launch $_url';
                   }
                 }),
           ],

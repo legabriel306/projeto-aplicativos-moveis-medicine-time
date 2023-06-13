@@ -12,9 +12,9 @@ class LoginController {
       password: senha,
     )
         .then((resultado) {
-      
       FirebaseFirestore.instance.collection('usuarios').add({
         'uid': resultado.user!.uid,
+        'email': email,
         'nome': nome,
       });
 
@@ -38,7 +38,7 @@ class LoginController {
     FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: senha)
         .then((resultado) {
-        Navigator.pushReplacementNamed(context, 'TelaMenu');
+      Navigator.pushReplacementNamed(context, 'TelaMenu');
     }).catchError((e) {
       switch (e.code) {
         case 'invalid-email':
@@ -50,7 +50,7 @@ class LoginController {
           WidgetMensagem().erro(context, 'Senha incorreta.');
           break;
         default:
-        WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}');
+          WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}');
       }
     });
   }
@@ -73,6 +73,24 @@ class LoginController {
 
   idUsuario() {
     return FirebaseAuth.instance.currentUser!.uid;
+  }
+
+  emailUsuario() {
+    return FirebaseAuth.instance.currentUser!.email;
+  }
+
+  Future<String> emailLogado() async {
+    var email = '';
+    await FirebaseFirestore.instance
+        .collection('usuarios')
+        .where('uid', isEqualTo: idUsuario())
+        .get()
+        .then(
+      (resultado) {
+        email = resultado.docs[0].data()['email'] ?? '';
+      },
+    );
+    return email;
   }
 
   Future<String> usuarioLogado() async {
