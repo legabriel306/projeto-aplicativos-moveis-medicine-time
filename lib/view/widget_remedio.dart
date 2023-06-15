@@ -79,9 +79,8 @@ class _WidgetRemedioState extends State<WidgetRemedio> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          // retorna um objeto do tipo Dialog
           return AlertDialog(
-            title: Text("Adicionar Tarefa"),
+            title: Text("Atualizar Remédio"),
             content: SizedBox(
               height: 250,
               width: 300,
@@ -91,7 +90,7 @@ class _WidgetRemedioState extends State<WidgetRemedio> {
                     controller: txtNome,
                     decoration: InputDecoration(
                       labelText: 'Nome',
-                      prefixIcon: Icon(Icons.description),
+                      prefixIcon: Icon(Icons.medication),
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -105,6 +104,7 @@ class _WidgetRemedioState extends State<WidgetRemedio> {
                       border: OutlineInputBorder(),
                     ),
                   ),
+                  SizedBox(height: 15),
                   TextField(
                     controller: txtHoraInicio,
                     maxLines: 1,

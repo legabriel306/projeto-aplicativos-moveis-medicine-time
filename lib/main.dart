@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:medicine_time/view/tela_configuracoes_view1.dart';
+import 'package:medicine_time/view/tela_configuracao_view.dart';
 import 'package:medicine_time/view/tela_splash_view.dart';
 import './view/tela_login_view.dart';
 import 'package:medicine_time/view/tela_menu_view.dart';

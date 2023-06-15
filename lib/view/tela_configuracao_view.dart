@@ -15,6 +15,11 @@ class TelaConfiguracoes extends StatefulWidget {
 class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
   TextEditingController nomeController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> _alterarNome() async {
     return showDialog<void>(
       context: context,
@@ -38,8 +43,7 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  LoginController()
-                      .atualizarNomeUsuario(context, nomeController.text);
+                  LoginController().atualizarNomeUsuario(context, nomeController.text);
                 });
                 // Agora o nome do usuário será atualizado no banco de dados
               },
@@ -103,9 +107,9 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
                     future: LoginController().usuarioLogado(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                        //if (snapshot.hasData) {
+                        if (snapshot.hasData) {
                         return Text(
-                          snapshot.data.toString(),
+                          nomeController.text,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.black,
@@ -114,33 +118,33 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
                           ),
                         );
 
-                        //} else {
-                        //return Text('Nome');
-                        //}
+                        } else {
+                          return Text('Nome');
+                        }
                       }
-                      return Text('2');
+                      return Text('Nome');
                     },
                   ),
-                  // FutureBuilder<String>(
-                  //   future: LoginController().emailLogado(),
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.connectionState == ConnectionState.done) {
-                  //       if (snapshot.hasData) {
-                  //         return Text(
-                  //           snapshot.data.toString(),
-                  //           textAlign: TextAlign.left,
-                  //           style: TextStyle(
-                  //             fontWeight: FontWeight.w100,
-                  //             fontSize: 20,
-                  //           ),
-                  //         );
-                  //       } else {
-                  //         return Text('teste@gmail.com');
-                  //       }
-                  //     }
-                  //     return Text('');
-                  //   },
-                  // ),
+                  FutureBuilder<String>(
+                    future: LoginController().emailLogado(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          return Text(
+                            snapshot.data.toString(),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w100,
+                              fontSize: 20,
+                            ),
+                          );
+                        } else {
+                          return Text('email');
+                        }
+                      }
+                      return Text('email');
+                    },
+                  ),
                 ],
               ),
             ],

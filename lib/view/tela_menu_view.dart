@@ -26,9 +26,6 @@ class _TelaMenuState extends State<TelaMenu> {
 
   @override
   void initState() {
-    index = -1;
-    //lista.add(Remedio('Omeprazol', '10 ML', '10:00'));
-    //lista.add(Remedio('Buscopan', '1X', '08:00'));
     super.initState();
   }
 
@@ -93,7 +90,7 @@ class _TelaMenuState extends State<TelaMenu> {
                   );
                 } else {
                   return Center(
-                    child: Text('Nenhuma tarefa encontrada.'),
+                    child: Text('Nenhum remedio encontrado.'),
                   );
                 }
             }
