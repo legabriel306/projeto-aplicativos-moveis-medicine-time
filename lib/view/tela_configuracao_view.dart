@@ -1,6 +1,7 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+//import 'package:medicine_time/view/widget_mensagem.dart';
 
 import '../controller/login_controller.dart';
 
@@ -12,9 +13,47 @@ class TelaConfiguracoes extends StatefulWidget {
 }
 
 class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
-  //final nome = LoginController().usuarioLogado();
+  TextEditingController nomeController = TextEditingController();
 
-  //final nome = LoginController().usuarioLogado();
+  Future<void> _alterarNome() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Editar Nome'),
+          content: TextField(
+            controller: nomeController,
+            decoration: const InputDecoration(labelText: 'Nome'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  LoginController()
+                      .atualizarNomeUsuario(context, nomeController.text);
+                });
+                // Agora o nome do usuário será atualizado no banco de dados
+              },
+              child: const Text(
+                'Salvar',
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,20 +83,17 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                margin: EdgeInsets.only(
-                  left: 0.0,
-                  top: 0.0,
-                  right: 20.0,
-                  bottom: 0.0,
-                ),
                 width: 70,
                 height: 70,
+                margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: AssetImage(
-                    'lib/images/foto-perfil.jpg',
-                  )),
+                  color: Color(0xfff4f4f4),
+                ),
+                child: Icon(
+                  Icons.person,
+                  size: 50,
+                  color: Colors.grey,
                 ),
               ),
               Column(
@@ -69,8 +105,7 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
                       if (snapshot.connectionState == ConnectionState.done) {
                         //if (snapshot.hasData) {
                         return Text(
-                          //snapshot.data.toString(),
-                          "Teste",
+                          snapshot.data.toString(),
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.black,
@@ -80,38 +115,61 @@ class _TelaConfiguracoesState extends State<TelaConfiguracoes> {
                         );
 
                         //} else {
-                        //return Text('1');
+                        //return Text('Nome');
                         //}
                       }
                       return Text('2');
                     },
                   ),
-                  FutureBuilder<String>(
-                    future: LoginController().emailLogado(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasData) {
-                          return Text(
-                            snapshot.data.toString(),
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 20,
-                            ),
-                          );
-                        } else {
-                          return Text('teste@gmail.com');
-                        }
-                      }
-                      return Text('');
-                    },
-                  ),
+                  // FutureBuilder<String>(
+                  //   future: LoginController().emailLogado(),
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.connectionState == ConnectionState.done) {
+                  //       if (snapshot.hasData) {
+                  //         return Text(
+                  //           snapshot.data.toString(),
+                  //           textAlign: TextAlign.left,
+                  //           style: TextStyle(
+                  //             fontWeight: FontWeight.w100,
+                  //             fontSize: 20,
+                  //           ),
+                  //         );
+                  //       } else {
+                  //         return Text('teste@gmail.com');
+                  //       }
+                  //     }
+                  //     return Text('');
+                  //   },
+                  // ),
                 ],
               ),
             ],
           ),
           SizedBox(
             height: 40,
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            height: 40,
+            child: TextButton(
+              style: ButtonStyle(
+                alignment: Alignment.centerLeft,
+              ),
+              child: Text(
+                "Alterar Nome",
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: () => {
+                _alterarNome(),
+              },
+            ),
+          ),
+          SizedBox(
+            height: 20,
           ),
           Container(
             alignment: Alignment.centerLeft,

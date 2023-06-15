@@ -5,32 +5,37 @@ import 'package:flutter/material.dart';
 import '../view/widget_mensagem.dart';
 
 class LoginController {
-  criarConta(context, nome, email, senha) {
+  criarConta(context, name, email, password) {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(
       email: email,
-      password: senha,
+      password: password,
     )
-        .then((resultado) {
-      FirebaseFirestore.instance.collection('usuarios').add({
-        'uid': resultado.user!.uid,
-        'email': email,
-        'nome': nome,
+        .then((result) async {
+      FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(result.user!.uid)
+          .set(
+        {
+          'uid': result.user!.uid,
+          'email': email,
+          'nome': name,
+        },
+      ).then((value) {
+        WidgetMensagem().sucesso(context, 'Usuário criado com sucesso.');
+        Navigator.pop(context);
+      }).catchError((e) {
+        switch (e.code) {
+          case 'email-already-in-use':
+            WidgetMensagem().erro(context, 'O email já foi cadastrado.');
+            break;
+          case 'invalid-email':
+            WidgetMensagem().erro(context, 'O formato do email é inválido.');
+            break;
+          default:
+            WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}');
+        }
       });
-
-      WidgetMensagem().sucesso(context, 'Usuário criado com sucesso.');
-      Navigator.pop(context);
-    }).catchError((e) {
-      switch (e.code) {
-        case 'email-already-in-use':
-          WidgetMensagem().erro(context, 'O email já foi cadastrado.');
-          break;
-        case 'invalid-email':
-          WidgetMensagem().erro(context, 'O formato do email é inválido.');
-          break;
-        default:
-          WidgetMensagem().erro(context, 'ERRO: ${e.code.toString()}');
-      }
     });
   }
 
@@ -105,5 +110,22 @@ class LoginController {
       },
     );
     return usuario;
+  }
+
+  Future<String> atualizarNomeUsuario(context, novoNome) async {
+    var userId = await idUsuario();
+
+    FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(userId)
+        .set({'nome': novoNome}, SetOptions(merge: true)).then((result) {
+      WidgetMensagem()
+          .sucesso(context, 'Nome do usuário atualizado com sucesso.');
+      Navigator.of(context).pop();
+    }).catchError((e) {
+      WidgetMensagem().erro(context, 'Erro na atualização: ${e.toString()}');
+    });
+
+    return novoNome;
   }
 }

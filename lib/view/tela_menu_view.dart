@@ -54,7 +54,7 @@ class _TelaMenuState extends State<TelaMenu> {
                         LoginController().logout();
                         Navigator.pushNamed(context, 'TelaConfiguracoes');
                       },
-                      icon: Icon(Icons.engineering, size: 14),
+                      icon: Icon(Icons.settings, size: 14),
                       label: Text(snapshot.data.toString()),
                     ),
                   );
@@ -87,7 +87,6 @@ class _TelaMenuState extends State<TelaMenu> {
                     itemBuilder: (context, index) {
                       String id = dados.docs[index].id;
                       dynamic item = dados.docs[index].data();
-                      contador++;
                       return WidgetRemedio(
                           item['nome'], item['dose'], item['horaInicio'], id);
                     },
@@ -107,93 +106,6 @@ class _TelaMenuState extends State<TelaMenu> {
           Navigator.pushNamed(context, 'TelaCadastroRemedio');
         },
       ),
-      persistentFooterButtons: [
-        Text('Total de Remédios: ${contador}'),
-      ],
-    );
-  }
-
-  void alterarRemedio(context, {docId}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // retorna um objeto do tipo Dialog
-        return AlertDialog(
-          title: Text("Adicionar Tarefa"),
-          content: SizedBox(
-            height: 250,
-            width: 300,
-            child: Column(
-              children: [
-                TextField(
-                  controller: txtNome,
-                  decoration: InputDecoration(
-                    labelText: 'Nome',
-                    prefixIcon: Icon(Icons.description),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: txtDose,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    labelText: 'Dose',
-                    alignLabelWithHint: true,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                TextField(
-                  controller: txtHoraInicio,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    labelText: 'Intervalo de tempo',
-                    alignLabelWithHint: true,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actionsPadding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          actions: [
-            TextButton(
-              child: Text("fechar"),
-              onPressed: () {
-                txtNome.clear();
-                txtDose.clear();
-                txtHoraInicio.clear();
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: Text("salvar"),
-              onPressed: () {
-                var r = Remedio(
-                  LoginController().idUsuario(),
-                  txtNome.text,
-                  txtDose.text,
-                  txtHoraInicio.text,
-                );
-                txtNome.clear();
-                txtDose.clear();
-                txtHoraInicio.clear();
-                if (docId == null) {
-                  //
-                  // ADICIONAR TAREFA
-                  //
-                  RemedioController().adicionar(context, r);
-                } else {
-                  //
-                  // ATUALIZAR TAREFA
-                  //
-                  RemedioController().atualizar(context, docId, r);
-                }
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
